@@ -78,6 +78,7 @@ sceneContainer.appendChild(renderer.domElement)
 const gltfLoader = new GLTFLoader()
 const towerAssetCache = new Map()
 const towerThumbnailCache = new Map()
+const THUMBNAIL_SIZE = 512
 let thumbnailRenderer = null
 let thumbnailScene = null
 let thumbnailCamera = null
@@ -241,7 +242,7 @@ function createTowerThumbnail(towerId) {
         thumbnailCamera.position.set(0, 1.15, 4.2)
         thumbnailCamera.lookAt(0, 0.9, 0)
         thumbnailRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'low-power' })
-        thumbnailRenderer.setSize(96, 96, false)
+        thumbnailRenderer.setSize(THUMBNAIL_SIZE, THUMBNAIL_SIZE, false)
         thumbnailRenderer.setPixelRatio(1)
         thumbnailRenderer.setClearColor(0x000000, 0)
         thumbnailScene.add(new THREE.HemisphereLight(0xf7f5ff, 0xbecbff, 1.7))
