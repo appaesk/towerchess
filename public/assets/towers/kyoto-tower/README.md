@@ -1,0 +1,1 @@
+Place the Nidec Kyoto Tower GLB model here as `model.glb`.

@@ -1,0 +1,1 @@
+Place the MIRAI TOWER GLB model here as `model.glb`.

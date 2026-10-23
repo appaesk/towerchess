@@ -1,0 +1,1 @@
+Place the Tokyo Skytree GLB model here as `model.glb`.

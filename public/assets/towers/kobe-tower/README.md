@@ -1,0 +1,1 @@
+Place the Kobe Port Tower GLB model here as `model.glb`.

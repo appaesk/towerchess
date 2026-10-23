@@ -1,0 +1,20 @@
+{
+  "name": "chesstowerjp",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vite": "^8.3.0",
+    "vitest": "^3.2.7"
+  },
+  "dependencies": {
+    "chess.js": "^1.4.0",
+    "three": "^0.186.1"
+  }
+}

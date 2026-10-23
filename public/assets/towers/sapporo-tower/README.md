@@ -1,0 +1,1 @@
+Place the Sapporo TV Tower GLB model here as `model.glb`.

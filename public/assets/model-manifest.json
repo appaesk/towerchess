@@ -1,0 +1,78 @@
+{
+  "project": "Japanese Tower Chess",
+  "fallbackMode": "procedural tower models",
+  "models": [
+    {
+      "id": "tokyo-tower",
+      "name": "Tokyo Tower",
+      "format": "procedural",
+      "source": "Custom fallback geometry",
+      "license": "Custom / in-project generated",
+      "status": "fallback"
+    },
+    {
+      "id": "skytree",
+      "name": "Tokyo Skytree",
+      "format": "procedural",
+      "source": "Custom fallback geometry",
+      "license": "Custom / in-project generated",
+      "status": "fallback"
+    },
+    {
+      "id": "fukuoka-tower",
+      "name": "Fukuoka Tower",
+      "format": "procedural",
+      "source": "Custom fallback geometry",
+      "license": "Custom / in-project generated",
+      "status": "fallback"
+    },
+    {
+      "id": "mirai-tower",
+      "name": "MIRAI TOWER",
+      "format": "procedural",
+      "source": "Custom fallback geometry",
+      "license": "Custom / in-project generated",
+      "status": "fallback"
+    },
+    {
+      "id": "kyoto-tower",
+      "name": "Nidec Kyoto Tower",
+      "format": "procedural",
+      "source": "Custom fallback geometry",
+      "license": "Custom / in-project generated",
+      "status": "fallback"
+    },
+    {
+      "id": "kobe-tower",
+      "name": "Kobe Port Tower",
+      "format": "procedural",
+      "source": "Custom fallback geometry",
+      "license": "Custom / in-project generated",
+      "status": "fallback"
+    },
+    {
+      "id": "tsutenkaku",
+      "name": "Tsutenkaku",
+      "format": "procedural",
+      "source": "Custom fallback geometry",
+      "license": "Custom / in-project generated",
+      "status": "fallback"
+    },
+    {
+      "id": "marine-tower",
+      "name": "Yokohama Marine Tower",
+      "format": "procedural",
+      "source": "Custom fallback geometry",
+      "license": "Custom / in-project generated",
+      "status": "fallback"
+    },
+    {
+      "id": "sapporo-tower",
+      "name": "Sapporo TV Tower",
+      "format": "procedural",
+      "source": "Custom fallback geometry",
+      "license": "Custom / in-project generated",
+      "status": "fallback"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+Place the Tsutenkaku GLB model here as `model.glb`.

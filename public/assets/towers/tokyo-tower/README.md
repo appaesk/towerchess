@@ -1,0 +1,1 @@
+Place the Tokyo Tower GLB model here as `model.glb`.

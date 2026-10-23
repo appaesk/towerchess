@@ -1,0 +1,1 @@
+Place the Fukuoka Tower GLB model here as `model.glb`.

@@ -1,0 +1,1 @@
+Place the Yokohama Marine Tower GLB model here as `model.glb`.
