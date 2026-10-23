@@ -92,6 +92,8 @@ button:focus-visible, input:focus-visible, select:focus-visible {
 .brand-mark {
   width: 48px;
   height: 48px;
+  flex: 0 0 48px;
+  aspect-ratio: 1;
   border-radius: 16px;
   display: grid;
   place-items: center;
@@ -132,6 +134,18 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   display: none;
   line-height: 1;
   font-size: 1.15rem;
+}
+
+.settings-icon {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.settings-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  fill: currentColor;
 }
 
 .primary-btn {
@@ -189,6 +203,7 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   height: 100% !important;
   display: block;
   border-radius: 26px;
+  touch-action: none;
 }
 
 .status-strip {
@@ -679,6 +694,14 @@ code {
 
   .toolbar-actions .button-icon {
     display: block;
+  }
+
+  .brand-mark {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+    border-radius: 13px;
+    font-size: 24px;
   }
 
   .board-panel {

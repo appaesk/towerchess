@@ -21,7 +21,9 @@ app.innerHTML = `
           <span class="button-icon" aria-hidden="true">↻</span><span class="button-label">Reset</span>
         </button>
         <button type="button" class="primary-btn" id="settings-btn" aria-label="Open settings" title="Open settings">
-          <span class="button-icon" aria-hidden="true">⚙</span><span class="button-label">Settings</span>
+          <span class="button-icon settings-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm9 3.5-2.2-.8a7.1 7.1 0 0 0-.7-1.7l1-2.1-1.9-1.9-2.1 1a7.1 7.1 0 0 0-1.7-.7L12.6 3h-2.7l-.8 2.2a7.1 7.1 0 0 0-1.7.7l-2.1-1-1.9 1.9 1 2.1a7.1 7.1 0 0 0-.7 1.7L1.5 12v2.7l2.2.8c.2.6.4 1.2.7 1.7l-1 2.1 1.9 1.9 2.1-1c.5.3 1.1.6 1.7.7l.8 2.2h2.7l.8-2.2a7.1 7.1 0 0 0 1.7-.7l2.1 1 1.9-1.9-1-2.1c.3-.5.6-1.1.7-1.7l2.2-.8V12Z"/></svg>
+          </span><span class="button-label">Settings</span>
         </button>
         <button type="button" class="primary-btn" id="info-btn" aria-label="About the game" title="About the game">
           <span class="button-icon" aria-hidden="true">ⓘ</span><span class="button-label">About</span>
@@ -667,6 +669,7 @@ function mountTowerPreviews() {
     previewKey.position.set(3, 5, 4)
     previewScene.add(previewKey)
 
+    let disposed = false
     let model = createTowerModel(towerId, state.settings.pieces.white, 0.7, state.settings.pieces.tint, 'p')
     model.position.y = 0.05
     previewScene.add(model)
@@ -682,15 +685,18 @@ function mountTowerPreviews() {
     resize()
 
     loadTowerAsset(towerId).then((source) => {
-      if (!source) return
+      if (disposed || !source) return
       const loadedModel = prepareTowerAsset(source, 0.7, state.settings.pieces.white)
-      if (!loadedModel) return
+      if (disposed || !loadedModel) {
+        if (loadedModel) disposeObject(loadedModel)
+        return
+      }
       loadedModel.position.y = 0.05
       previewScene.remove(model)
       disposeObject(model)
       model = loadedModel
       previewScene.add(model)
-      previewRenderer.render(previewScene, previewCamera)
+      if (!disposed) previewRenderer.render(previewScene, previewCamera)
     })
 
     let dragging = false
@@ -720,6 +726,7 @@ function mountTowerPreviews() {
     container.addEventListener('pointercancel', handlePointerUp)
 
     state.towerPreviews.push(() => {
+      disposed = true
       container.removeEventListener('pointerdown', handlePointerDown)
       container.removeEventListener('pointermove', handlePointerMove)
       container.removeEventListener('pointerup', handlePointerUp)
@@ -731,7 +738,13 @@ function mountTowerPreviews() {
   })
 }
 
+function disposeTowerPreviews() {
+  state.towerPreviews.forEach((cleanup) => cleanup())
+  state.towerPreviews = []
+}
+
 function renderSettingsModal() {
+  disposeTowerPreviews()
   state.activeModal = 'settings'
   modalRoot.classList.remove('hidden')
   modalRoot.innerHTML = `
@@ -897,6 +910,7 @@ function renderSettingsModal() {
 }
 
 function renderInfoModal() {
+  disposeTowerPreviews()
   state.activeModal = 'info'
   modalRoot.classList.remove('hidden')
   modalRoot.innerHTML = `
@@ -966,8 +980,7 @@ function renderInfoModal() {
 }
 
 function closeModal() {
-  state.towerPreviews.forEach((cleanup) => cleanup())
-  state.towerPreviews = []
+  disposeTowerPreviews()
   modalRoot.classList.add('hidden')
   modalRoot.innerHTML = ''
   state.activeModal = null
@@ -1069,6 +1082,9 @@ const dragState = {
   pieceHit: false,
 }
 
+const activePointers = new Map()
+let pinchDistance = null
+
 function scheduleRender() {
   if (!scheduleRender.renderQueued) {
     scheduleRender.renderQueued = true
@@ -1080,6 +1096,13 @@ function scheduleRender() {
 }
 
 renderer.domElement.addEventListener('pointerdown', (event) => {
+  activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY })
+  if (activePointers.size > 1) {
+    dragState.active = false
+    dragState.dragged = true
+    pinchDistance = getPointerDistance()
+    return
+  }
   dragState.active = true
   dragState.startX = event.clientX
   dragState.startY = event.clientY
@@ -1088,6 +1111,19 @@ renderer.domElement.addEventListener('pointerdown', (event) => {
 })
 
 renderer.domElement.addEventListener('pointermove', (event) => {
+  if (activePointers.has(event.pointerId)) {
+    activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY })
+  }
+  if (activePointers.size > 1) {
+    const nextDistance = getPointerDistance()
+    if (pinchDistance) {
+      orbit.distance = THREE.MathUtils.clamp(orbit.distance - (nextDistance - pinchDistance) * 0.025, 10, 26)
+      state.settings.camera.distance = orbit.distance
+      updateCamera()
+    }
+    pinchDistance = nextDistance
+    return
+  }
   if (!dragState.active) return
   const dx = event.clientX - dragState.startX
   const dy = event.clientY - dragState.startY
@@ -1102,15 +1138,31 @@ renderer.domElement.addEventListener('pointermove', (event) => {
 })
 
 renderer.domElement.addEventListener('pointerup', (event) => {
-  if (!dragState.dragged) {
+  activePointers.delete(event.pointerId)
+  if (activePointers.size === 0) {
+    pinchDistance = null
+  }
+  if (!dragState.dragged && activePointers.size === 0) {
     handleBoardClick(event)
   }
+  dragState.active = false
+})
+
+renderer.domElement.addEventListener('pointercancel', (event) => {
+  activePointers.delete(event.pointerId)
+  pinchDistance = activePointers.size > 1 ? getPointerDistance() : null
   dragState.active = false
 })
 
 renderer.domElement.addEventListener('pointerleave', () => {
   dragState.active = false
 })
+
+function getPointerDistance() {
+  const pointers = [...activePointers.values()]
+  if (pointers.length < 2) return 0
+  return Math.hypot(pointers[0].x - pointers[1].x, pointers[0].y - pointers[1].y)
+}
 
 function updateCamera() {
   const x = orbit.target.x + orbit.distance * Math.cos(orbit.pitch) * Math.sin(orbit.yaw)
