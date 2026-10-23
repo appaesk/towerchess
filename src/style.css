@@ -576,21 +576,9 @@ input[type='range'] {
 .tower-preview {
   width: 100%;
   height: 180px;
-  overflow: hidden;
+  object-fit: contain;
   border-radius: 16px;
   background: transparent;
-  cursor: grab;
-  touch-action: none;
-}
-
-.tower-preview:active {
-  cursor: grabbing;
-}
-
-.tower-preview canvas {
-  width: 100%;
-  height: 100%;
-  display: block;
 }
 
 .credit-list {

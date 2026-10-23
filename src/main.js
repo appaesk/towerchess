@@ -54,7 +54,6 @@ const state = {
   pieceMeshes: [],
   animatedPiece: null,
   pieceRenderVersion: 0,
-  towerPreviews: [],
 }
 
 const sceneContainer = document.querySelector('#scene-container')
@@ -79,6 +78,9 @@ sceneContainer.appendChild(renderer.domElement)
 const gltfLoader = new GLTFLoader()
 const towerAssetCache = new Map()
 const towerThumbnailCache = new Map()
+let thumbnailRenderer = null
+let thumbnailScene = null
+let thumbnailCamera = null
 
 const ambient = new THREE.HemisphereLight(0xf7f5ff, 0xbecbff, 1.4)
 scene.add(ambient)
@@ -233,22 +235,23 @@ function createTowerThumbnail(towerId) {
     const thumbnailPromise = loadTowerAsset(towerId).then((source) => {
       if (!source) return ''
 
-      const thumbnailScene = new THREE.Scene()
-      const thumbnailCamera = new THREE.PerspectiveCamera(30, 1, 0.1, 100)
-      thumbnailCamera.position.set(0, 1.15, 4.2)
-      thumbnailCamera.lookAt(0, 0.9, 0)
-      const thumbnailRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'low-power' })
-      thumbnailRenderer.setSize(96, 96, false)
-      thumbnailRenderer.setPixelRatio(1)
-      thumbnailRenderer.setClearColor(0x000000, 0)
-      thumbnailScene.add(new THREE.HemisphereLight(0xf7f5ff, 0xbecbff, 1.7))
-      const keyLight = new THREE.DirectionalLight(0xffffff, 1.8)
-      keyLight.position.set(3, 5, 4)
-      thumbnailScene.add(keyLight)
+      if (!thumbnailRenderer) {
+        thumbnailScene = new THREE.Scene()
+        thumbnailCamera = new THREE.PerspectiveCamera(30, 1, 0.1, 100)
+        thumbnailCamera.position.set(0, 1.15, 4.2)
+        thumbnailCamera.lookAt(0, 0.9, 0)
+        thumbnailRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'low-power' })
+        thumbnailRenderer.setSize(96, 96, false)
+        thumbnailRenderer.setPixelRatio(1)
+        thumbnailRenderer.setClearColor(0x000000, 0)
+        thumbnailScene.add(new THREE.HemisphereLight(0xf7f5ff, 0xbecbff, 1.7))
+        const keyLight = new THREE.DirectionalLight(0xffffff, 1.8)
+        keyLight.position.set(3, 5, 4)
+        thumbnailScene.add(keyLight)
+      }
 
       const model = prepareTowerAsset(source, 0.7, state.settings.pieces.white)
       if (!model) {
-        thumbnailRenderer.dispose()
         return ''
       }
       model.position.y = 0.05
@@ -257,7 +260,6 @@ function createTowerThumbnail(towerId) {
       const thumbnail = thumbnailRenderer.domElement.toDataURL('image/png')
       thumbnailScene.remove(model)
       disposeObject(model)
-      thumbnailRenderer.dispose()
       return thumbnail
     })
     towerThumbnailCache.set(towerId, thumbnailPromise)
@@ -646,105 +648,12 @@ function getTowerInfoCard(tower) {
         </div>
         <span class="tower-height">${tower.height}</span>
       </div>
-      <div class="tower-preview" data-tower-preview="${tower.id}" aria-label="Rotatable 3D preview of ${tower.name}"></div>
+      <img class="tower-preview" data-tower-thumbnail="${tower.id}" alt="${tower.name} 3D model preview" />
     </article>
   `
 }
 
-function mountTowerPreviews() {
-  modalRoot.querySelectorAll('[data-tower-preview]').forEach((container) => {
-    const towerId = container.dataset.towerPreview
-    const previewScene = new THREE.Scene()
-    const previewCamera = new THREE.PerspectiveCamera(30, 1, 0.1, 100)
-    previewCamera.position.set(0, 1.15, 4.2)
-    previewCamera.lookAt(0, 0.9, 0)
-
-    const previewRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'low-power' })
-    previewRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    previewRenderer.setClearColor(0x000000, 0)
-    container.appendChild(previewRenderer.domElement)
-
-    previewScene.add(new THREE.HemisphereLight(0xf7f5ff, 0xbecbff, 1.7))
-    const previewKey = new THREE.DirectionalLight(0xffffff, 1.8)
-    previewKey.position.set(3, 5, 4)
-    previewScene.add(previewKey)
-
-    let disposed = false
-    let model = createTowerModel(towerId, state.settings.pieces.white, 0.7, state.settings.pieces.tint, 'p')
-    model.position.y = 0.05
-    previewScene.add(model)
-
-    const resize = () => {
-      const width = Math.max(container.clientWidth, 1)
-      const height = Math.max(container.clientHeight, 1)
-      previewRenderer.setSize(width, height, false)
-      previewCamera.aspect = width / height
-      previewCamera.updateProjectionMatrix()
-      previewRenderer.render(previewScene, previewCamera)
-    }
-    resize()
-
-    loadTowerAsset(towerId).then((source) => {
-      if (disposed || !source) return
-      const loadedModel = prepareTowerAsset(source, 0.7, state.settings.pieces.white)
-      if (disposed || !loadedModel) {
-        if (loadedModel) disposeObject(loadedModel)
-        return
-      }
-      loadedModel.position.y = 0.05
-      previewScene.remove(model)
-      disposeObject(model)
-      model = loadedModel
-      previewScene.add(model)
-      if (!disposed) previewRenderer.render(previewScene, previewCamera)
-    })
-
-    let dragging = false
-    let previousX = 0
-    let previousY = 0
-    const handlePointerDown = (event) => {
-      dragging = true
-      previousX = event.clientX
-      previousY = event.clientY
-      container.setPointerCapture(event.pointerId)
-    }
-    const handlePointerMove = (event) => {
-      if (!dragging) return
-      model.rotation.y += (event.clientX - previousX) * 0.012
-      model.rotation.x = THREE.MathUtils.clamp(model.rotation.x + (event.clientY - previousY) * 0.008, -0.45, 0.45)
-      previousX = event.clientX
-      previousY = event.clientY
-      previewRenderer.render(previewScene, previewCamera)
-    }
-    const handlePointerUp = (event) => {
-      dragging = false
-      if (container.hasPointerCapture(event.pointerId)) container.releasePointerCapture(event.pointerId)
-    }
-    container.addEventListener('pointerdown', handlePointerDown)
-    container.addEventListener('pointermove', handlePointerMove)
-    container.addEventListener('pointerup', handlePointerUp)
-    container.addEventListener('pointercancel', handlePointerUp)
-
-    state.towerPreviews.push(() => {
-      disposed = true
-      container.removeEventListener('pointerdown', handlePointerDown)
-      container.removeEventListener('pointermove', handlePointerMove)
-      container.removeEventListener('pointerup', handlePointerUp)
-      container.removeEventListener('pointercancel', handlePointerUp)
-      previewScene.remove(model)
-      disposeObject(model)
-      previewRenderer.dispose()
-    })
-  })
-}
-
-function disposeTowerPreviews() {
-  state.towerPreviews.forEach((cleanup) => cleanup())
-  state.towerPreviews = []
-}
-
 function renderSettingsModal() {
-  disposeTowerPreviews()
   state.activeModal = 'settings'
   modalRoot.classList.remove('hidden')
   modalRoot.innerHTML = `
@@ -910,7 +819,6 @@ function renderSettingsModal() {
 }
 
 function renderInfoModal() {
-  disposeTowerPreviews()
   state.activeModal = 'info'
   modalRoot.classList.remove('hidden')
   modalRoot.innerHTML = `
@@ -958,7 +866,11 @@ function renderInfoModal() {
   `
 
   modalRoot.querySelector('[data-action="close-modal"]').addEventListener('click', closeModal)
-  mountTowerPreviews()
+  modalRoot.querySelectorAll('[data-tower-thumbnail]').forEach((image) => {
+    createTowerThumbnail(image.dataset.towerThumbnail).then((thumbnail) => {
+      image.src = thumbnail
+    })
+  })
   modalRoot.querySelector('[data-action="share-site"]').addEventListener('click', async () => {
     const url = window.location.href
     try {
@@ -980,7 +892,6 @@ function renderInfoModal() {
 }
 
 function closeModal() {
-  disposeTowerPreviews()
   modalRoot.classList.add('hidden')
   modalRoot.innerHTML = ''
   state.activeModal = null
