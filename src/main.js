@@ -874,7 +874,7 @@ function renderInfoModal() {
         <section>
           <h3>Behind the scenes</h3>
           <p>Read how Japanese landmarks became playable 3D chess pieces.</p>
-          <a class="primary-btn behind-scenes-link" href="https://appaeco.wordpress.com/2026/10/24/tower-chess-turning-towers-into-chess-pieces-japanese-version/" target="_blank" rel="noreferrer">Read the making-of article</a>
+          <button type="button" class="primary-btn behind-scenes-link" data-action="behind-scenes">Read the making-of article</button>
         </section>
 
         <section>
@@ -886,6 +886,13 @@ function renderInfoModal() {
   `
 
   modalRoot.querySelector('[data-action="close-modal"]').addEventListener('click', closeModal)
+  modalRoot.querySelector('[data-action="behind-scenes"]').addEventListener('click', () => {
+    window.open(
+      'https://appaeco.wordpress.com/2026/10/24/tower-chess-turning-towers-into-chess-pieces-japanese-version/',
+      '_blank',
+      'noopener,noreferrer',
+    )
+  })
   modalRoot.querySelectorAll('[data-tower-thumbnail]').forEach((image) => {
     createTowerThumbnail(image.dataset.towerThumbnail).then((thumbnail) => {
       image.src = thumbnail
