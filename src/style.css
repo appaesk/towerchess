@@ -229,20 +229,21 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   inset: 0;
   display: grid;
   place-items: center;
-  background: rgba(103, 137, 204, 0.08);
+  background: transparent;
   z-index: 50;
   padding: 24px;
-  isolation: isolate;
 }
 
 .modal-root::before {
   content: '';
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: 0;
   background: rgba(103, 137, 204, 0.2);
   backdrop-filter: blur(18px) saturate(135%);
   -webkit-backdrop-filter: blur(18px) saturate(135%);
+  pointer-events: none;
+  transform: translateZ(0);
 }
 
 .modal-root.hidden {
@@ -590,6 +591,12 @@ input[type='range'] {
   object-fit: contain;
   border-radius: 16px;
   background: transparent;
+  transition: transform 0.25s ease;
+}
+
+.tower-card:hover .tower-preview,
+.tower-card:focus-within .tower-preview {
+  transform: rotate(2deg) scale(1.02);
 }
 
 .tower-card-actions {

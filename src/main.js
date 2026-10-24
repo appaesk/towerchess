@@ -1039,7 +1039,13 @@ renderer.domElement.addEventListener('pointermove', (event) => {
   if (activePointers.has(event.pointerId)) {
     activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY })
   }
+  if (activePointers.size <= 1) {
+    const hoveredHit = intersectBoard(event)
+    const hoveredPiece = hoveredHit && (hoveredHit.object.userData.piece || hoveredHit.object.parent?.userData.piece)
+    renderer.domElement.style.cursor = dragState.active ? 'grabbing' : hoveredPiece ? 'pointer' : 'grab'
+  }
   if (activePointers.size > 1) {
+    renderer.domElement.style.cursor = 'grabbing'
     const nextDistance = getPointerDistance()
     if (pinchDistance) {
       orbit.distance = THREE.MathUtils.clamp(orbit.distance - (nextDistance - pinchDistance) * 0.025, 10, 26)
@@ -1081,6 +1087,7 @@ renderer.domElement.addEventListener('pointercancel', (event) => {
 
 renderer.domElement.addEventListener('pointerleave', () => {
   dragState.active = false
+  renderer.domElement.style.cursor = 'grab'
 })
 
 function getPointerDistance() {
