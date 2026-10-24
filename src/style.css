@@ -229,11 +229,20 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   inset: 0;
   display: grid;
   place-items: center;
-  background: rgba(103, 137, 204, 0.18);
-  backdrop-filter: blur(18px) saturate(135%);
-  -webkit-backdrop-filter: blur(18px) saturate(135%);
+  background: rgba(103, 137, 204, 0.08);
   z-index: 50;
   padding: 24px;
+  isolation: isolate;
+}
+
+.modal-root::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: rgba(103, 137, 204, 0.2);
+  backdrop-filter: blur(18px) saturate(135%);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
 }
 
 .modal-root.hidden {
@@ -241,6 +250,8 @@ button:focus-visible, input:focus-visible, select:focus-visible {
 }
 
 .modal-card {
+  position: relative;
+  z-index: 1;
   width: min(760px, 100%);
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.58), rgba(220, 235, 255, 0.38));
   border: 0.5px solid rgba(255, 255, 255, 0.52);
@@ -579,6 +590,40 @@ input[type='range'] {
   object-fit: contain;
   border-radius: 16px;
   background: transparent;
+}
+
+.tower-card-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.tower-action {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(145, 190, 255, 0.6);
+  border-radius: 50%;
+  color: #4c58dd;
+  background: rgba(255, 255, 255, 0.42);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.tower-action:hover,
+.tower-action:focus-visible {
+  transform: translateY(-1px);
+  background: rgba(var(--board-dark-rgb), 0.2);
+}
+
+.tower-action svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .credit-list {

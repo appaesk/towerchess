@@ -640,6 +640,8 @@ function openSummaryModal(summary) {
 }
 
 function getTowerInfoCard(tower) {
+  const assetUrl = `${import.meta.env.BASE_URL}assets/towers/${tower.id}/model.glb`
+  const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${tower.name}, ${tower.city}, Japan`)}`
   return `
     <article class="tower-card glass-panel">
       <div class="tower-card-header">
@@ -650,6 +652,17 @@ function getTowerInfoCard(tower) {
         <span class="tower-height">${tower.height}</span>
       </div>
       <img class="tower-preview" data-tower-thumbnail="${tower.id}" alt="${tower.name} 3D model preview" />
+      <div class="tower-card-actions" aria-label="${tower.name} links">
+        <a class="tower-action" href="${assetUrl}" download="${tower.id}.glb" aria-label="Download ${tower.name} 3D asset" title="Download 3D asset">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 19h14"/></svg>
+        </a>
+        <a class="tower-action" href="${mapUrl}" target="_blank" rel="noreferrer" aria-label="Open ${tower.name} in Google Maps" title="Open in Google Maps">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.2 7-11a7 7 0 1 0-14 0c0 5.8 7 11 7 11Z"/><circle cx="12" cy="10" r="2.2"/></svg>
+        </a>
+        <a class="tower-action" href="${tower.website}" target="_blank" rel="noreferrer" aria-label="Visit ${tower.name} official website" title="Official website">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+        </a>
+      </div>
     </article>
   `
 }

@@ -1,13 +1,13 @@
 export const TOWER_OPTIONS = [
-  { id: 'tokyo-tower', name: 'Tokyo Tower', city: 'Tokyo', prefecture: 'Tokyo', height: '333 m', defaultRole: 'king' },
-  { id: 'skytree', name: 'Tokyo Skytree', city: 'Tokyo', prefecture: 'Tokyo', height: '634 m', defaultRole: 'queen' },
-  { id: 'fukuoka-tower', name: 'Fukuoka Tower', city: 'Fukuoka', prefecture: 'Fukuoka', height: '234 m', defaultRole: 'bishop' },
-  { id: 'mirai-tower', name: 'Chubu Electric Power MIRAI TOWER', city: 'Nagoya', prefecture: 'Aichi', height: '180 m', defaultRole: 'knight' },
-  { id: 'kyoto-tower', name: 'Nidec Kyoto Tower', city: 'Kyoto', prefecture: 'Kyoto', height: '124 m', defaultRole: 'pawn' },
-  { id: 'kobe-tower', name: 'Kobe Port Tower', city: 'Kobe', prefecture: 'Hyogo', height: '108 m', defaultRole: 'rook' },
-  { id: 'tsutenkaku', name: 'Tsutenkaku', city: 'Osaka', prefecture: 'Osaka', height: '103 m', defaultRole: 'extra' },
-  { id: 'marine-tower', name: 'Yokohama Marine Tower', city: 'Yokohama', prefecture: 'Kanagawa', height: '106 m', defaultRole: 'extra' },
-  { id: 'sapporo-tower', name: 'Sapporo TV Tower', city: 'Sapporo', prefecture: 'Hokkaido', height: '147.2 m', defaultRole: 'extra' },
+  { id: 'tokyo-tower', name: 'Tokyo Tower', city: 'Tokyo', prefecture: 'Tokyo', height: '333 m', defaultRole: 'king', website: 'https://www.tokyotower.co.jp/' },
+  { id: 'skytree', name: 'Tokyo Skytree', city: 'Tokyo', prefecture: 'Tokyo', height: '634 m', defaultRole: 'queen', website: 'https://www.tokyo-skytree.jp/en/' },
+  { id: 'fukuoka-tower', name: 'Fukuoka Tower', city: 'Fukuoka', prefecture: 'Fukuoka', height: '234 m', defaultRole: 'bishop', website: 'https://www.fukuokatower.co.jp/en/' },
+  { id: 'mirai-tower', name: 'Chubu Electric Power MIRAI TOWER', city: 'Nagoya', prefecture: 'Aichi', height: '180 m', defaultRole: 'knight', website: 'https://www.nagoya-tv-tower.co.jp/en/' },
+  { id: 'kyoto-tower', name: 'Nidec Kyoto Tower', city: 'Kyoto', prefecture: 'Kyoto', height: '124 m', defaultRole: 'pawn', website: 'https://www.kyoto-tower.jp/en/' },
+  { id: 'kobe-tower', name: 'Kobe Port Tower', city: 'Kobe', prefecture: 'Hyogo', height: '108 m', defaultRole: 'rook', website: 'https://www.kobe-port-tower.com/' },
+  { id: 'tsutenkaku', name: 'Tsutenkaku', city: 'Osaka', prefecture: 'Osaka', height: '103 m', defaultRole: 'extra', website: 'https://www.tsutenkaku.co.jp/Guide/english.html' },
+  { id: 'marine-tower', name: 'Yokohama Marine Tower', city: 'Yokohama', prefecture: 'Kanagawa', height: '106 m', defaultRole: 'extra', website: 'https://marinetower.yokohama/' },
+  { id: 'sapporo-tower', name: 'Sapporo TV Tower', city: 'Sapporo', prefecture: 'Hokkaido', height: '147.2 m', defaultRole: 'extra', website: 'https://www.tv-tower.co.jp/' },
 ]
 
 export const DEFAULT_SETTINGS = {
