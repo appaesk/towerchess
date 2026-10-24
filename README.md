@@ -4,6 +4,8 @@ A lightweight, client-side chess experience built with Vite, Three.js, and chess
 
 Play online: [Japanese Tower Chess on GitHub Pages](https://appaesk.github.io/towerchess/)
 
+Behind the scenes: [Turning towers into chess pieces — Japanese version](https://appaeco.wordpress.com/2026/10/24/tower-chess-turning-towers-into-chess-pieces-japanese-version/)
+
 ## Features
 
 - Three.js 3D chessboard and Japanese tower pieces

@@ -12,7 +12,7 @@ app.innerHTML = `
       <div class="brand-wrap">
         <div class="brand-mark">🗼</div>
         <div>
-          <p class="eyebrow">Tower Chess - Japanese Version</p>
+          <p class="eyebrow">Tower Chess - Japanese Version, Ideated by appaeco (2026)</p>
           <h1>TOWERCHESS</h1>
         </div>
       </div>
@@ -874,6 +874,12 @@ function renderInfoModal() {
         <section>
           <h3>Share</h3>
           <button type="button" class="primary-btn" data-action="share-site">Share website</button>
+        </section>
+
+        <section>
+          <h3>Behind the scenes</h3>
+          <p>Read how Japanese landmarks became playable 3D chess pieces.</p>
+          <a class="primary-btn behind-scenes-link" href="https://appaeco.wordpress.com/2026/10/24/tower-chess-turning-towers-into-chess-pieces-japanese-version/" target="_blank" rel="noreferrer">Read the making-of article</a>
         </section>
       </div>
     </div>
